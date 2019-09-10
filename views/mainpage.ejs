@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Havir Members Project</title>
+    <link href="https://fonts.googleapis.com/css?family=Manjari|Oswald&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+
+  </head>
+  <body>
+  <div class="wrapper">
+    <nav>
+      <div class="main-logo">
+        <a href="/">Main</a>
+      </div>
+      <div class="ul-div">
+        <ul>
+          <% if (user) { %>
+          <li><a href="/logout">Logout</a></li>
+          <% } else { %>
+          <li class='register'>Register</li>
+          <li class='login'>Login</li>
+          <% } %>
+        </ul>
+      </div>
+      <div class="search-bar">
+        <form id='search-tool' action="index.html" method="post">
+          <input class='search-bar-input'type="text" name="searchvalue" placeholder='Search tags...'>
+          <button class='search-button'type="button" name="button">Not yet</button>
+        </form>
+      </div>
+    </nav>
+
+  <div class="statistics">
+    <div class="statistics-data">
+      <p>Amount of posts: <span class='data-span'><%= postamount %></span></p>
+      <p>Amount of users: <span class='data-span'><%= useramount %></span></p>
+      <p>Amount of tags: <span class='data-span'>33</span></p>
+      <p>Amount of views: <span class='data-span'>2</span></p>
+    </div>
+    <div class="statistics-outside-bar">STATISTICS</div>
+    <i class="fa fa-exclamation-circle exclamation-mark"></i>
+  </div>
+  <main>
+    <div class="post-tab">
+      <% if (!user) { %>
+      <div class="main-message"><div class="delete-x" style='font-size:33px'>&times;</div>Hello! Come join, write your own message!</div>
+      <% } %>
+      <% if (user) { %>
+      <div class="post-make-before">
+        <div class="post-make">
+          <form id='postmakeform' class='makepostform' action="/make-post" method="post">
+            <h2>Write your post, <%= user.username %> !</h2>
+            <label for="messagetitle">Title:</label>
+            <input type="text" name="messagetitle" value="" minlength='3' maxlength='35' autofocus required>
+            <br>
+            <label for="messagetext">Message:</label>
+            <textarea name="messagetext" rows="8" cols="40" required></textarea>
+            <label for="messagetags">Tags: (spacebar works as the divisor; e.g. #tag)</label>
+            <input type="text" name="messagetags" disabled>
+            <button class='register-button' type="button" name="button">Send</button>
+          </form>
+        </div>
+      </div>
+      <% } %>
+
+        <div class="break"></div>
+
+        <% if (user) { %>
+          <% if (user.admin) { %>
+            <% for (post of posts) { %>
+            <div class="post-before">
+              <div class="post">
+                <div class="user-info">
+                  <a class='to-user-profile' href="#"><img class='user-photo' style='background-color: <%= user.icon_url %>'></a>
+                  <div class="user-name"><a class='to-user-profile' href="#"><%= post.author.username %></a></div>
+                </div>
+                <div class="user-message">
+                <span class='user-inside-title'><%= post.title %></span>
+                <span class='user-inside-message'><%= post.message %></span>
+                <div class="user-tags"><a href="#">#test #tag</a></div>
+                </div>
+                <div class="user-footer">
+                  <div class="user-footer-time"><%= post.added_ago %></div>
+                </div>
+                <div class="admin-edit">
+                  <span class='admin-option'><a href="<%= post.delete_link %>">Delete</a></span>
+                </div>
+              </div>
+            </div>
+            <% } %>
+            <% } else { %>
+              <% for (post of posts) { %>
+              <div class="post-before">
+                <div class="post">
+                  <div class="user-info">
+                    <a class='to-user-profile' href="#"><img class='user-photo' style='background-color: <%= user.icon_url %>'></a>
+                    <div class="user-name"><a class='to-user-profile' href="#"><%= post.author.username %></a></div>
+                  </div>
+                  <div class="user-message">
+                  <span class='user-inside-title'><%= post.title %></span>
+                  <span class='user-inside-message'><%= post.message %></span>
+                  <div class="user-tags"><a href="#">#test #tag</a></div>
+                  </div>
+                  <div class="user-footer">
+                    <div class="user-footer-time"><%= post.added_ago %></div>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+              <% } %>
+              <% } else { %>
+                <% for (post of posts) { %>
+                <div class="post-before">
+                  <div class="post">
+                    <div class="user-info">
+                      <a class='to-user-profile' href="#"><img class='user-photo'></a>
+                      <div class="user-name"><a class='to-user-profile' href="#">Anonymous</a></div>
+                    </div>
+                    <div class="user-message">
+                    <span class='user-inside-title'><%= post.title %></span>
+                    <span class='user-inside-message'><%= post.message %></span>
+                    <div class="user-tags"><a href="#">#test #tag</a></div>
+                    </div>
+                    <div class="user-footer">
+                      <div class="user-footer-time"><%= post.added_ago %></div>
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+                <% } %>
+
+    </div>
+
+  </main>
+  <div class="modal modal-register">
+    <div class="modal-content">
+      <div class="modal-top">
+        <span class="modal-close">&times;</span>
+        <h2>Register menu</h2>
+      </div>
+      <form id='formregister' action="/register-user" method="post">
+        <div class="modal-body">
+            <label for="registerusername">Username:</label>
+            <input type="text" name="registerusername" placeholder='Type your username here...' required>
+            <label for="registerpassword">Password:</label>
+            <input type="password" name="registerpassword" placeholder='Type your password here...' required>
+        </div>
+        <div class="modal-footer">
+        <button class='register-button' type="button" name="button">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal modal-login">
+    <div class="modal-content">
+      <div class="modal-top">
+        <span class="modal-close">&times;</span>
+        <h2>Login menu</h2>
+      </div>
+      <form id='formlogin' action="/login-user" method="post">
+        <div class="modal-body">
+            <label for="username">Username:</label>
+            <input type="text" name="username" placeholder='Type your username here...' required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" placeholder='Type your password here...' required>
+        </div>
+        <div class="modal-footer">
+        <button class='register-button' type="button" name="button">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  </div>
+  <script src="mainpagescript.js" charset="utf-8"></script>
+  </body>
+</html>
